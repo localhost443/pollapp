@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  express-app:
+    build: .
+    container_name: express-container
+    ports:
+      - "3000:3000"  # Map local port 3000 to container port 3000
+    volumes:
+      - ./src:/usr/src/app  # Mount local src folder to container
+      - /usr/src/app/node_modules  # Persist node_modules folder inside container
+    depends_on:
+      - mongodb  # Ensure MongoDB starts first
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb-container
+    ports:
+      - "27017:27017"  # Expose MongoDB port 27017
+    volumes:
+      - ./mongodbData:/data/db  # Persist MongoDB data locally
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
